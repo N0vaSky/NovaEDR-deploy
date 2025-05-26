@@ -3,12 +3,12 @@
 #define MyAppName "Nova EDR"
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "N0vaSky"
-#define MyAppURL "github.com/n0vasky" # CHANGE ME
+#define MyAppURL "github.com/n0vasky" // CHANGE ME
 #define MyAppExeName "Nova EDR.exe"
-#define SourcePath "C:\Users\nova\source\repos\NovaEDR\bin\Debug" # CHANGE ME
-#define IconPath "C:\Users\nova\Downloads\novaedr.ico" # CHANGE ME
-#define ServerURL "https://raw.githubusercontent.com/N0vaSky/NovaEDR-deploy/" # CHANGE ME
-#define UpdateIntervalMinutes "60" # CHANGE ME IF YOU FEEL LIKE IT
+#define SourcePath "C:\Users\nova\source\repos\NovaEDR\bin\Debug" // CHANGE ME
+#define IconPath "C:\Users\nova\Downloads\novaedr.ico" // CHANGE ME
+#define ServerURL "https://raw.githubusercontent.com/N0vaSky/NovaEDR-deploy/" // CHANGE ME
+#define UpdateIntervalMinutes "60" // CHANGE ME IF YOU FEEL LIKE IT
 
 [Setup]
 ; Basic setup information
@@ -118,7 +118,7 @@ begin
   end
   else
   begin
-    ClientIDPage.Values[0] := 'nhpdriXRA3M9Fs7rKkaAtG2lI';
+    ClientIDPage.Values[0] := 'nhpdriXRA3M9Fs7rKkaAtG2lI'; // CHANGE ME
     IsClientIDFromParam := False;
   end;
   
