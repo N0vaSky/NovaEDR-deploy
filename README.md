@@ -41,7 +41,7 @@ Nova EDR integrates three core security components managed by a single C# Window
 ### Prerequisites
 
 #### Server Infrastructure Required:
-1. **Velociraptor Server** - Deploy following [installaion guide](https://socfortress.medium.com/free-incident-response-with-velociraptor-bedd2583415d) (Note: Modify any version numbers in the commands of the guide to match the most current version that you set up. Also, you can generate a Windows MSI for endpoints on the server itself you don't need to compile one like in the guide. Just use the `Server.Utils.CreateMSI` Server Artifact)
+1. **Velociraptor Server** - Deploy following [installation guide](https://socfortress.medium.com/free-incident-response-with-velociraptor-bedd2583415d) (Note: Modify any version numbers in the commands of the guide to match the most current version that you set up. Also, you can generate a Windows MSI for endpoints on the server itself you don't need to compile one like in the guide. Just use the `Server.Utils.CreateMSI` Server Artifact)
 2. **Wazuh Server** - Deploy following [installation guide](https://documentation.wazuh.com/current/quickstart.html)
 3. **GitHub Repository** - Host detection rules and agent binaries
 
