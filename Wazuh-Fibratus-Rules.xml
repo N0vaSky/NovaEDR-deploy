@@ -1,0 +1,888 @@
+<group name="local,fibratus">
+
+  <!-- 1) File access to SAM database (Event ID: 27297)
+  <rule id="220001" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">27297</field>
+    <description>Fibratus Alert: Access to the Windows SAM database. Exposes local account credentials. Verify if the reading process is legitimate or malicious.</description>
+    <group>windows</group>
+  </rule>
+  NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 2) Credentials access from backups via Rundll32 (Event ID: 40678) -->
+  <rule id="220002" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">40678</field>
+    <description>Fibratus Alert: Rundll32 accessing backup credentials. Attackers may abuse this to retrieve stored creds. Validate the process and command line.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 3) Credential discovery via VaultCmd.exe (Event ID: 62873) -->
+  <rule id="220003" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">62873</field>
+    <description>Fibratus Alert: Credential discovery via VaultCmd.exe. Attackers can harvest stored credentials. Check process usage and user privileges.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 4) LSASS memory dumping via legitimate or offensive tools (Event ID: 39735) -->
+  <rule id="220004" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">39735</field>
+    <description>Fibratus Alert: LSASS memory dumping attempt. Often used to steal credential hashes. Confirm if this is an expected diagnostic or malicious action.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 5) LSASS memory dump preparation via SilentProcessExit (Event ID: 28416) -->
+  <rule id="220005" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">28416</field>
+    <description>Fibratus Alert: LSASS dump prepared via SilentProcessExit. Attackers may configure silent dumping for credential theft. Investigate registry settings and usage.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 6) LSASS memory dump via Windows Error Reporting (Event ID: 31619) -->
+  <rule id="220006" level="6">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">31619</field>
+    <description>Fibratus Alert: LSASS memory dump through Windows Error Reporting. Attackers abuse WER to extract creds. Verify the triggering process and context.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 7) Potential SAM hive dumping (Event ID: 34232) 
+  <rule id="220007" level="3">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">34232</field>
+    <description>Fibratus Alert: Potential SAM hive dumping. The SAM hive stores local credential data. Check if legitimate system backup or suspicious process is reading it.</description>
+    <group>windows</group>
+  </rule>
+    NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 8) Remote thread creation into LSASS (Event ID: 1371) -->
+  <rule id="220008" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">1371</field>
+    <description>Fibratus Alert: Remote thread injected into LSASS. Attackers often do this to dump credentials. Confirm if the injecting process is approved.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 9) Suspicious access to Active Directory domain database (Event ID: 59232) -->
+  <rule id="220009" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">59232</field>
+    <description>Fibratus Alert: Possibly suspicious read of the AD domain database. Could yield domain hashes. Verify if performed by a legitimate domain admin task.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 10) Suspicious access to Unattended Panther files (Event ID: 1117) -->
+  <rule id="220010" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">1117</field>
+    <description>Fibratus Alert: Access to Unattended Panther files, which may store setup credentials. Validate if the reading process is authorized.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 11) Suspicious access to Windows DPAPI Master Keys (Event ID: 28625) -->
+  <rule id="220011" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">28625</field>
+    <description>Fibratus Alert: DPAPI master keys accessed. Attackers can decrypt sensitive data. Investigate who accessed it and confirm if it's standard OS usage.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 12) Suspicious access to Windows Credential Manager files (Event ID: 61648) 
+  <rule id="220012" level="3">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">61648</field>
+    <description>Fibratus Alert: Windows Credential Manager files read. Attackers may retrieve stored passwords. Inspect the process context and purpose.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 13) Suspicious access to Windows Vault files (Event ID: 44790) -->
+  <rule id="220013" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">44790</field>
+    <description>Fibratus Alert: Windows Vault files accessed. Could indicate credential harvesting. Verify if the user and process accessing these is valid.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 14) Suspicious security package DLL loaded (Event ID: 46110) -->
+  <rule id="220014" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">46110</field>
+    <description>Fibratus Alert: A suspicious security package DLL was loaded, possibly hooking authentication. Inspect the DLL path and process for potential tampering.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 15) Unusual access to SSH keys (Event ID: 45628) -->
+  <rule id="220015" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">45628</field>
+    <description>Fibratus Alert: SSH key files accessed. Attackers can use stolen keys for lateral movement. Confirm whether this read is expected or suspicious.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 16) Unusual access to Web Browser Credential stores (Event ID: 34569) 
+  <rule id="220016" level="3">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">34569</field>
+    <description>Fibratus Alert: Web browser credential store read. Attackers can dump saved passwords. Validate the process and user context are legitimate.</description>
+    <group>windows</group>
+  </rule>
+  NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 17) Unusual access to Windows Credential history files (Event ID: 6230) -->
+  <rule id="220017" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">6230</field>
+    <description>Fibratus Alert: Windows credential history files read. Attackers can retrieve old password data. Investigate whether this action is authorized.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 18) DLL Side-Loading via a copied binary (Event ID: 45259) -->
+  <rule id="220018" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">45259</field>
+    <description>Fibratus Alert: DLL side-loading with a copied binary. Attackers load malicious DLLs to bypass security. Confirm the binary and DLL are signed or trusted.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 19) PID Spoofing Detection (Event ID: 45666) 
+  <rule id="220019" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">45666</field>
+    <description>Fibratus Alert: Potential PID spoofing. Attackers can reuse or forge process IDs for stealth. Verify the real process behind the claimed PID.</description>
+    <group>windows</group>
+  </rule>
+ NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 20) Potential Process Doppelganging (Event ID: 60551) -->
+  <rule id="220020" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">60551</field>
+    <description>Fibratus Alert: Process Doppelganging suspected. Attackers modify the file transaction to run malicious code. Check if this process's memory sections are legitimate. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 21) Potential Process Hollowing (Event ID: 58977) -->
+  <rule id="220021" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">58977</field>
+    <description>Fibratus Alert: Process hollowing attempt. Attackers replace a legitimate process image with malicious code. Investigate the new thread or memory sections in the target process. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 22) Potential process injection via tainted memory section (Event ID: 27436)
+  <rule id="220022" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">27436</field>
+    <description>Fibratus Alert: Tainted memory section injection. Attackers can run code in another process. Validate the memory region modifications and the calling process.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 23) Potential thread execution hijacking (Event ID: 27220) -->
+  <rule id="220023" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">27220</field>
+    <description>Fibratus Alert: Thread execution hijacking. Attackers redirect existing threads to malicious code. Examine the call stack and memory mapping of the hijacked thread. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 24) Process spawned via remote thread (Event ID: 62997) -->
+  <rule id="220024" level="10">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">62997</field>
+    <description>Fibratus Alert: A remote thread created a new process. Attackers often spawn hidden payloads. Inspect parent-child relationships and command lines. The spawned process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 25) Regsvr32 scriptlet execution (Event ID: 61701) -->
+  <rule id="220025" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">61701</field>
+    <description>Fibratus Alert: Regsvr32 scriptlet execution. Attackers exploit regsvr32 to bypass whitelisting. Check the scriptlet path and verify legitimate usage.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 26) Suspicious DLL loaded via memory section mapping (Event ID: 10824) -->
+  <rule id="220026" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">10824</field>
+    <description>Fibratus Alert: DLL loaded via a mapped memory section. Attackers can inject malicious libraries. Investigate the loaded DLL path and the calling process context. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 27) System Binary Proxy Execution via Rundll32 (Event ID: 17035) -->
+  <rule id="220027" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">17035</field>
+    <description>Fibratus Alert: Rundll32 used as a proxy for system binary execution. Attackers exploit this to run code stealthily. Check the DLL or command line invoked by rundll32. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 28) Thread context set from unbacked memory (Event ID: 53541) -->
+  <rule id="220028" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">53541</field>
+    <description>Fibratus Alert: Thread context changed from unbacked memory. May indicate code injection or hooking. Validate the memory region and the reason for the context switch.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 29) Unsigned DLL injection via remote thread (Event ID: 23708) 
+  <rule id="220029" level="2">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">23708</field>
+    <description>Fibratus Alert: Unsigned DLL injection using a remote thread. Attackers can load malicious libraries. Examine the injected DLL path, file hash, and process ownership.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 30) Executable file creation from a macro-enabled Microsoft Office document (Event ID: 53835) -->
+  <rule id="220030" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">53835</field>
+    <description>Fibratus Alert: Macro-enabled Office doc created an executable. Common malware tactic. Investigate the doc source and newly created file to confirm legitimacy.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 31) Execution via Microsoft Office process (Event ID: 57098) -->
+  <rule id="220031" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">57098</field>
+    <description>Fibratus Alert: Code run under a Microsoft Office process. Attackers may exploit macros or embedded objects. Check the command line and user context.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 32) Macro execution via script interpreter (Event ID: 33594) -->
+  <rule id="220032" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">33594</field>
+    <description>Fibratus Alert: Macro invoked a script interpreter (e.g. cscript, powershell). Attackers can pivot from Office macros. Confirm if the macro is safe or malicious.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 33) Process spawned from macro-enabled Microsoft Office document (Event ID: 14813) -->
+  <rule id="220033" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">14813</field>
+    <description>Fibratus Alert: A macro-enabled Office doc spawned a child process. Attackers often drop payloads this way. Validate the doc's source and the resulting process.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 34) Suspicious DLL loaded by Microsoft Office process (Event ID: 35557) -->
+  <rule id="220034" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">35557</field>
+    <description>Fibratus Alert: Microsoft Office loaded a suspicious DLL. Attackers may hijack Office for malicious modules. Check the DLL path and signature thoroughly.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 35) Suspicious Microsoft Office embedded object (Event ID: 26307) -->
+  <rule id="220035" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">26307</field>
+    <description>Fibratus Alert: Potentially malicious embedded object in an Office doc. Attackers can store hidden code. Investigate the object with a sandbox or advanced scan.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 36) Network connection via startup folder executable or script (Event ID: 51145) -->
+  <rule id="220036" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">51145</field>
+    <description>Fibratus Alert: A startup folder script/executable made a network connection. Attackers persist here for C2. Verify the script's origin and whether it's legitimate.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 37) RID Hijacking (Event ID: 22323) -->
+  <rule id="220037" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">22323</field>
+    <description>Fibratus Alert: RID hijacking attempt. Attackers can remap a normal user to an admin RID. Inspect the SAM or security hive for unauthorized changes.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 38) Registry Run Key/Startup Persistence via Script Host or Untrusted Process (Event ID: 12778) -->
+  <rule id="220038" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">12778</field>
+    <description>Fibratus Alert: Detected persistence attempts via Registry Run keys or Startup folder entries, modified by a script interpreter or an untrusted process. Such methods are commonly exploited by adversaries for reboot persistence. Review the modifying entity and context for potential security risks. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 39) Suspicious Microsoft Office template (Event ID: 30152) -->
+  <rule id="220039" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">30152</field>
+    <description>Fibratus Alert: Possibly malicious Office template. Attackers use custom templates to auto-launch macros. Validate the template location and signature.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 40) Suspicious persistence via registry modification (Event ID: 51188) -->
+  <rule id="220040" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">51188</field>
+    <description>Fibratus Alert: Registry-based persistence attempt. Attackers may add run keys or scheduled tasks. Examine the modified registry path for suspicious entries.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 41) Suspicious port monitor loaded (Event ID: 30145) -->
+  <rule id="220041" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">30145</field>
+    <description>Fibratus Alert: Suspicious port monitor loaded. Attackers can hijack spooler or printing sub-system. Validate the driver's source and authenticity.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 42) Suspicious Startup shell folder modification (Event ID: 19040) -->
+  <rule id="220042" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">19040</field>
+    <description>Fibratus Alert: Startup shell folder was modified. Attackers may add scripts or exes here for persistence. Check the new files or subfolders carefully.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 43) Unusual file written in Startup folder (Event ID: 443) -->
+  <rule id="220043" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">443</field>
+    <description>Fibratus Alert: A new file appeared in the Startup folder. Attackers often drop malware here for auto-run. Investigate the file's hash and source.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 44) Unusual process modified registry run key (Event ID: 20521) -->
+  <rule id="220044" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">20521</field>
+    <description>Fibratus Alert: A process changed a registry run key in an unusual manner. Attackers can persist here. Check what was added or modified in HKLM/HKCU run.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 45) Potential privilege escalation via phantom DLL hijacking (Event ID: 124) -->
+  <rule id="220045" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">124</field>
+    <description>Fibratus Alert: Phantom DLL hijacking attempt for privilege escalation. Attackers trick an app into loading their DLL. Validate the library path and caller process.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 46) Vulnerable or malicious driver dropped (Event ID: 48013) -->
+  <rule id="220046" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">48013</field>
+    <description>Fibratus Alert: A malicious or vulnerable driver file was dropped. Attackers can use driver exploits for kernel-level access. Examine the driver's signature and origin.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 47) Vulnerable or malicious driver loaded (Event ID: 51523) -->
+  <rule id="220047" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">51523</field>
+    <description>Fibratus Alert: A vulnerable or malicious driver loaded into kernel space. Attackers gain high privileges via driver exploits. Validate the driver's authenticity immediately.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 48) AppDomain Manager injection via CLR search order hijacking (Event ID: 63763) -->
+  <rule id="220048" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">63763</field>
+    <description>Fibratus Alert: AppDomain Manager injection via CLR search order hijacking. Attackers can hijack .NET processes for stealthy code execution. Investigate .NET usage and loaded assemblies.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 49) Clear Eventlog (Event ID: 39913)
+  <rule id="220049" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">39913</field>
+    <description>Fibratus Alert: Event logs cleared. Attackers may be covering tracks. Confirm if it's an admin maintenance task or suspicious log-tampering attempt.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 50) DLL loaded via APC queue (Event ID: 43721) -->
+  <rule id="220050" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">43721</field>
+    <description>Fibratus Alert: A DLL was loaded via APC queue. Attackers can queue APC calls in a remote thread to inject code. Validate the DLL's path and the calling process.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 51) DLL loaded via a callback function (Event ID: 35404) -->
+  <rule id="220051" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">35404</field>
+    <description>Fibratus Alert: DLL loaded through a callback function. Attackers may exploit callbacks to load malicious libraries. Inspect the function pointer references and loaded module.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 52) .NET assembly loaded by unmanaged process (Event ID: 16735) 
+  <rule id="220052" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">16735</field>
+    <description>Fibratus Alert: A .NET assembly was injected or loaded by an unmanaged process. Attackers can abuse mixed-mode injection. Check if this usage is intended or malicious.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 53) Hidden registry key creation (Event ID: 47094) 
+  <rule id="220053" level="9">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">47094</field>
+    <description>Fibratus Alert: A hidden registry key was created. Attackers often store config or payload in obscured keys. Investigate the newly created key path and contents.</description>
+    <group>windows</group>
+  </rule>
+NOTE: THIS RULE NEEDS TUNING; excessive noise of legitimate activity. -->
+
+  <!-- 54) Image load via NTFS transaction (Event ID: 38412) -->
+  <rule id="220054" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">38412</field>
+    <description>Fibratus Alert: An image was loaded within an NTFS transaction. Attackers can hide malicious code in transacted file operations. Confirm the file's integrity and origin.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 55) Potential injection via .NET debugging (Event ID: 51121) -->
+  <rule id="220055" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">51121</field>
+    <description>Fibratus Alert: .NET debugging injection attempt. Attackers can attach a debugger to manipulate .NET assemblies at runtime. Verify if debugging is legitimate or malicious.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 56) Process execution from a self-deleting binary (Event ID: 3627) -->
+  <rule id="220056" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">3627</field>
+    <description>Fibratus Alert: A process launched from a self-deleting binary. Attackers often remove the file post-execution to evade detection. Investigate any residue and validate process origin.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 57) Hidden local account creation (Event ID: 39897) -->
+  <rule id="220057" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">39897</field>
+    <description>Fibratus Alert: A Hidden Local Account was created. Attackers can maintain stealthy access with such accounts. Check user listings and group memberships for anomalies.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 58) Reverse Shell & Remote Script Execution Detection (Event ID: 36050) -->
+  <rule id="220058" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">36050</field>
+    <description>Fibratus Alert: Reverse shell or remote script execution detected. Indicates potential C2 activity, payload downloads, or post-exploitation behavior.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 59) Suspicious DNS Query Detection (Event ID: 45476) -->
+  <rule id="220059" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">45476</field>
+    <description>Fibratus Alert: Suspicious DNS query detected, potential command and control (C2), data exfiltration, or infostealer malware.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 60) VPN and Proxy Usage Detection (Event ID: 58793) -->
+  <rule id="220060" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">58793</field>
+    <description>Fibratus Alert: Detected VPN or Proxy usage based on process executions, network connections, and DNS queries.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 61) Hosts File Modification Detection (Event ID: 63003) -->
+  <rule id="220061" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">63003</field>
+    <description>Fibratus Alert: Detected modification to the Windows Hosts file, potentially to block security updates, redirect domains, or disrupt network operations. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 62) Windows Defender Exclusion Modification Detection (Event ID: 57169) -->
+  <rule id="220062" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">57169</field>
+    <description>Fibratus Alert: Detected modification to Windows Defender exclusions via registry operations. Possible defense evasion.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 63) Windows Defender Disabling Attempt (Event ID: 64278) -->
+  <rule id="220072" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">64278</field>
+    <description>Fibratus Alert: Windows Defender Disabling Attempt! May indicate tampering via registry, PowerShell, or executable manipulation. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+ 
+  <!-- 65) Malicious System DLL Abuse (Event ID: 17448) -->
+  <rule id="220065" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">17448</field>
+    <description>Fibratus Alert: Possible Malicious System DLL Abuse detected! Immediate investigation required for possible ransomware or malware.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 66) File I/O Variant - Enum/Delete/Create/Read/Write (Event ID: 40975) -->
+  <rule id="220066" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">40975</field>
+    <description>Fibratus Alert: Ransomware in progress detected - File I/O variant with Enum/Delete/Create/Read/Write operations. Immediate containment and isolation recommended. The malicious process was terminated.</description>
+    <group>windows,file_operations</group>
+  </rule>
+
+  <!-- 67) File-to-File with Delete (Event ID: 54578) -->
+  <rule id="220067" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">54578</field>
+    <description>Fibratus Alert: Ransomware in progress detected - File-to-File Operation with Deletion. Suspicious file copying and immediate deletion pattern detected. The malicious process was terminated.</description>
+    <group>windows,file_operations</group>
+  </rule>
+
+  <!-- 68) File-to-File with Rename and Delete (Event ID: 52681) -->
+  <rule id="220068" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">52681</field>
+    <description>Fibratus Alert: Ransomware in progress detected - File-to-File Operation with Rename and Delete. Potentially suspicious file renaming and deletion sequence. The malicious process was terminated.</description>
+    <group>windows,file_operations</group>
+  </rule>
+
+  <!-- 69) Gamma Ransomware Early Detection (Event ID: 53449) -->
+  <rule id="220069" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">53449</field>
+    <description>Fibratus Alert: Gamma Ransomware Early Detection Pattern. Potential ransomware activity identified in early stages. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 73) Memory-to-File Post-Overwrite (Event ID: 31483) -->
+  <rule id="220073" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">31483</field>
+    <description>Fibratus Alert: Ransomware in progress detected - Memory-to-File Post-Overwrite Detected. Suspicious file overwriting method typical of ransomware. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 74) Memory-to-File Pre-Overwrite (Event ID: 56872) -->
+  <rule id="220074" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">56872</field>
+    <description>Fibratus Alert: Ransomware in progress detected - Memory-to-File Pre-Overwrite Detected. Potential pre-encryption file manipulation observed. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 75) Critical Suspicious Executable Pattern (Unsigned) (Event ID: 48384) -->
+  <rule id="220075" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">48384</field>
+    <description>Fibratus Alert: Unsigned executable with suspicious pattern detected. Potential Malware or Ransomware attempting to bypass security checks. Validate the executable's origin and integrity. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 77) Ransomware or Malware Process Detected (Generic 2) (Event ID: 43956) -->
+  <rule id="220077" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">43956</field>
+    <description>Fibratus Alert: Potential Ransomware or Malware process detected. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 78) Ransomware or Malware Process Detected (Generic) (Event ID: 64101) -->
+  <rule id="220078" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">64101</field>
+    <description>Fibratus Alert: Potential Ransomware or Malware process detected.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- NEW RULES ADDED BELOW -->
+
+  <!-- 79) LSASS access from unsigned executable (Event ID: 8124) -->
+  <rule id="220079" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">8124</field>
+    <description>Fibratus Alert: LSASS access from unsigned executable. Unsigned processes accessing LSASS may indicate credential dumping attempts. Verify the process integrity and purpose. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 80) LSASS handle leak via Seclogon (Event ID: 7047) -->
+  <rule id="220080" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">7047</field>
+    <description>Fibratus Alert: LSASS handle leak via Seclogon service. Attackers may exploit handle leaks to access LSASS memory. Investigate the Seclogon service and related processes.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 81) LSASS memory dump via MiniDumpWriteDump (Event ID: 56527) -->
+  <rule id="220081" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">56527</field>
+    <description>Fibratus Alert: LSASS memory dump via MiniDumpWriteDump API. Direct API call to dump LSASS memory for credential extraction. Validate the calling process and context. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 82) LSASS process clone creation via reflection (Event ID: 17693) -->
+  <rule id="220082" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">17693</field>
+    <description>Fibratus Alert: LSASS process clone created via reflection. Advanced technique to clone LSASS for credential dumping while evading detection. Investigate immediately. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 83) Suspicious Vault client DLL load (Event ID: 18100) -->
+  <rule id="220083" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">18100</field>
+    <description>Fibratus Alert: Suspicious Vault client DLL loaded. Attackers may exploit vault client libraries to access stored credentials. Verify the DLL's authenticity and loading context.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 84) DLL loaded via LdrpKernel32 overwrite (Event ID: 5828) -->
+  <rule id="220084" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">5828</field>
+    <description>Fibratus Alert: DLL loaded via LdrpKernel32 overwrite. Advanced DLL injection technique using loader manipulation. Investigate the loaded DLL and injection method. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 85) DLL Side-Loading via Microsoft Office dropped file (Event ID: 13569) -->
+  <rule id="220085" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">13569</field>
+    <description>Fibratus Alert: DLL side-loading via Microsoft Office dropped file. Office document may have dropped malicious DLL for side-loading attack. Examine the Office document and DLL.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 86) Potential process creation via shellcode (Event ID: 28932) -->
+  <rule id="220086" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">28932</field>
+    <description>Fibratus Alert: Process creation via shellcode detected. Shellcode execution often indicates code injection or exploit activity. Investigate the shellcode source and target process.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 87) Potential shellcode execution via ETW logger thread (Event ID: 4785) -->
+  <rule id="220087" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">4785</field>
+    <description>Fibratus Alert: Shellcode execution via ETW logger thread. Advanced technique using Event Tracing for Windows thread for shellcode execution. Investigate the ETW manipulation.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 88) Suspicious HTML Application script execution (Event ID: 11847) -->
+  <rule id="220088" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">11847</field>
+    <description>Fibratus Alert: Suspicious HTML Application (HTA) script execution. HTA files can bypass security controls and execute scripts. Verify the HTA source and content. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 89) Suspicious XSL script execution (Event ID: 28878) -->
+  <rule id="220089" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">28878</field>
+    <description>Fibratus Alert: Suspicious XSL script execution. XSL stylesheets can contain executable code to bypass application whitelisting. Examine the XSL file and execution context.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 90) Suspicious object symbolic link creation (Event ID: 59815) -->
+  <rule id="220090" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">59815</field>
+    <description>Fibratus Alert: Suspicious object symbolic link creation. Attackers may create symbolic links for privilege escalation or file system manipulation. Investigate the link target and purpose.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 91) Suspicious Windows Defender exclusions registry modification (Event ID: 11019) -->
+  <rule id="220091" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">11019</field>
+    <description>Fibratus Alert: Suspicious Windows Defender exclusions registry modification. Different from standard exclusion modification, may indicate advanced evasion technique. Verify the registry changes. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 92) Windows Defender protection tampering via registry (Event ID: 46085) -->
+  <rule id="220092" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">46085</field>
+    <description>Fibratus Alert: Windows Defender protection tampering via registry. Registry-based tampering with Defender protection features. Investigate the registry modifications and their source. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 93) Generic Ransomware Initialization Pattern (Event ID: 22269) -->
+  <rule id="220093" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">22269</field>
+    <description>Fibratus Alert: Generic ransomware initialization pattern detected. Early-stage ransomware activity identified. Immediate isolation and investigation recommended. The malicious process was terminated.</description>
+    <group>windows,ransomware</group>
+  </rule>
+
+  <!-- 94) Microsoft Office file execution via script interpreter (Event ID: 56510) -->
+  <rule id="220094" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">56510</field>
+    <description>Fibratus Alert: Microsoft Office file execution via script interpreter. Office document may be executing malicious scripts. Verify the document source and script content. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 95) Microsoft Office file execution via WMI (Event ID: 19803) -->
+  <rule id="220095" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">19803</field>
+    <description>Fibratus Alert: Microsoft Office file execution via WMI. Office document using WMI for execution, potentially bypassing security controls. Investigate the WMI usage and Office document. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 96) Potential ClickFix infection chain via Run window (Event ID: 22507) -->
+  <rule id="220096" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">22507</field>
+    <description>Fibratus Alert: Potential ClickFix infection chain via Run window. Social engineering technique tricking users to run malicious commands. Investigate the Run window usage and commands. The malicious process was terminated.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 97) Suspicious execution via WMI from a Microsoft Office process (Event ID: 49294) -->
+  <rule id="220097" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">49294</field>
+    <description>Fibratus Alert: Suspicious WMI execution from Microsoft Office process. Office process using WMI for potentially malicious execution. Examine the WMI commands and Office document.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 98) Suspicious Microsoft Office add-in loaded (Event ID: 57017) -->
+  <rule id="220098" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">57017</field>
+    <description>Fibratus Alert: Suspicious Microsoft Office add-in loaded. Malicious add-ins can provide persistence and code execution. Verify the add-in's authenticity and functionality.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 99) Executable file dropped by an unsigned service DLL (Event ID: 13254) -->
+  <rule id="220099" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">13254</field>
+    <description>Fibratus Alert: Executable file dropped by unsigned service DLL. Unsigned service DLL dropping executables may indicate malicious service installation. Investigate the service and dropped file.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 100) Potential port monitor or print processor persistence via registry modification (Event ID: 5978) -->
+  <rule id="220100" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">5978</field>
+    <description>Fibratus Alert: Port monitor or print processor persistence via registry modification. Attackers may abuse print system for persistence. Examine the registry modifications and print system components.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 101) Suspicious Netsh Helper DLL execution (Event ID: 43846) -->
+  <rule id="220101" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">43846</field>
+    <description>Fibratus Alert: Suspicious Netsh Helper DLL execution. Netsh helpers can provide persistence and code execution. Verify the helper DLL's legitimacy and registration.</description>
+    <group>windows</group>
+  </rule>
+
+  <!-- 102) Suspicious print processor loaded (Event ID: 49689) -->
+  <rule id="220102" level="12">
+    <if_sid>60600</if_sid>
+    <options>no_full_log</options>
+    <field name="win.system.eventID">49689</field>
+    <description>Fibratus Alert: Suspicious print processor loaded. Print processors can be abused for persistence and privilege escalation. Validate the print processor's source and functionality.</description>
+    <group>windows</group>
+  </rule>
+
+</group>
